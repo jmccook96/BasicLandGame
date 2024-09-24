@@ -1,4 +1,4 @@
-﻿//
+//
 // Created by James McCook on 24/09/2024.
 //
 
@@ -8,7 +8,11 @@
 #include <iostream>
 #include <random>
 
-#include "CardEffects.h"
+#include "Forest.h"
+#include "Island.h"
+#include "Mountain.h"
+#include "Plains.h"
+#include "Swamp.h"
 
 #define LOG std::cout << m_name << ": "
 
@@ -30,8 +34,9 @@ void Player::GenerateField()
 void Player::GenerateDeck(const std::vector<CardType>& cardTypes)
 {
     for (CardType type : cardTypes)
-        for (int cardCount = 0; cardCount < CARDS_PER_TYPE; cardCount++)
-            m_deck.emplace_back(type);
+        for (int cardCount = 0; cardCount < CARDS_PER_TYPE; cardCount++) {
+            m_deck.emplace_back(MakeCardOfType(type));
+        }
 }
 
 void Player::DrawCard()
@@ -44,7 +49,7 @@ void Player::DrawCard()
     m_deck.pop_back();
 }
 
-bool Player::PlayCard(CardType cardType)
+bool Player::PlayCard(CardType cardType, Player& opponentPlayer)
 {
     int index = GetHandIndexByLetter(cardType);
     if (index < 0)
@@ -52,6 +57,7 @@ bool Player::PlayCard(CardType cardType)
 
     m_field[cardType]++;
     LOG << "Played card " << Card::GetName(cardType) << std::endl;
+    delete m_hand.at(index);
     m_hand.erase(m_hand.begin() + index);
     return true;
 }
@@ -70,7 +76,7 @@ bool Player::DiscardCard(CardType cardType) {
 
 bool Player::DiscardRandomCard() {
     // Get random card in hand.
-    return DiscardCard(m_hand[GetRandomEngine()() % m_hand.size()].GetType());
+    return DiscardCard(m_hand[GetRandomEngine()() % m_hand.size()]->GetType());
 }
 
 int Player::GetFieldCardCount() const {
@@ -94,6 +100,7 @@ bool Player::DestroyLand(CardType type)
     if (m_field[type] > 0)
     {
         m_field[type]--;
+        m_graveyard.push_back(MakeCardOfType(type));
         LOG << "Destroyed land.";
         return true;
     }
@@ -106,7 +113,7 @@ bool Player::DestroyRandomLand()
     if (GetFieldCardCount() == 0)
         return false;
 
-    while (!DestroyLand(CardEffects::GetRandomLandType()));
+    while (!DestroyLand(GetRandomLandType()));
     return true;
 }
 
@@ -114,12 +121,12 @@ bool Player::ReturnLandFromGraveyard(CardType type)
 {
     for (int index = 0; index < m_graveyard.size(); ++index)
     {
-        if (m_graveyard[index].GetType() != type)
+        if (m_graveyard[index]->GetType() != type)
             continue;
 
         m_hand.push_back(m_graveyard[index]);
         m_graveyard.erase(m_graveyard.begin() + index);
-        LOG <<  "Returned " << m_hand.back().GetName() << " from graveyard to hand." << std::endl;
+        LOG <<  "Returned " << m_hand.back()->GetName() << " from graveyard to hand." << std::endl;
         return true;
     }
     return false;
@@ -130,7 +137,7 @@ bool Player::ReturnRandomLandFromGraveyard()
     if (m_graveyard.empty())
         return false;
 
-    while (!ReturnLandFromGraveyard(CardEffects::GetRandomLandType()));
+    while (!ReturnLandFromGraveyard(GetRandomLandType()));
     return true;
 }
 
@@ -157,20 +164,20 @@ void Player::MoveGraveyardToDeck()
 int Player::GetHandIndexByLetter(CardType cardType) const
 {
     for (int cardIndex = 0; cardIndex < m_hand.size(); cardIndex++)
-        if (m_hand[cardIndex].GetType() == cardType)
+        if (m_hand[cardIndex]->GetType() == cardType)
             return cardIndex;
 
     return -1;
 }
 
-std::map<CardType, int> Player::CountList(std::vector<Card> list)
+std::map<CardType, int> Player::CountList(std::vector<Card*> list)
 {
     std::map<CardType, int> counts;
     for (int landIndex = (int)CardType::FIRST; landIndex < CardType::COUNT; landIndex++)
         counts.insert_or_assign(CardType(landIndex), 0);
 
-    for (Card card : list)
-        counts[card.GetType()]++;
+    for (Card* pCard : list)
+        counts[pCard->GetType()]++;
 
     return counts;
 }

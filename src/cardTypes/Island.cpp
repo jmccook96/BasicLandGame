@@ -11,7 +11,7 @@ Island_Card::Island_Card()
 {
 }
 
-void Island_Card::ActionCardName(Player &owner, Player&) const {
+void Island_Card::ActionCard(Player &owner, Player&) const {
     owner.DrawCard();
 }
 

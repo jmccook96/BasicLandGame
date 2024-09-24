@@ -11,7 +11,7 @@ Swamp_Card::Swamp_Card()
 {
 }
 
-void Swamp_Card::ActionCardName(Player &owner, Player &opponent) const {
+void Swamp_Card::ActionCard(Player &owner, Player &opponent) const {
     opponent.DiscardRandomCard();
 }
 

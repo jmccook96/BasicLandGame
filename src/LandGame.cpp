@@ -6,8 +6,6 @@
 
 #include <iostream>
 
-#include "CardEffects.h"
-
 #define DEFAULT_DECK_LIST {Forest, Plains, Mountain, Swamp, Island}
 
 LandGame::LandGame()
@@ -56,12 +54,15 @@ void LandGame::TakeTurn_AI()
 {
     OnTurnStart(m_playerAI);
     // Iterate over hand until we find a card that makes sense to play.
-    for (const Card& card : m_playerAI.GetHand()) {
-        if (card.CanEffectBePlayed(m_playerAI, m_player)) {
-            ActionInput(card.GetLetterRepresentation(), m_playerAI, m_player);
+    for (int cardIdx = m_playerAI.GetHand().size() - 1; cardIdx >= 0; cardIdx--) {
+        Card* pCard = m_playerAI.GetHand()[cardIdx];
+        if (pCard->CanEffectBePlayed(m_playerAI, m_player)) {
+            ActionInput(pCard->GetLetterRepresentation(), m_playerAI, m_player);
+            if (pCard->GetType() != Forest) // TODO: Migrate to a turn counter system.
+                return;
         }
     }
-    ActionInput(m_playerAI.GetHand()[0].GetLetterRepresentation(), m_playerAI, m_player);
+    ActionInput(m_playerAI.GetHand()[0]->GetLetterRepresentation(), m_playerAI, m_player);
 }
 
 
@@ -94,10 +95,7 @@ bool LandGame::ActionInput(const char input, Player& playersTurn, Player& oppone
     }
 
     const CardType type = GetTypeFromLetter(input);
-    if (playersTurn.PlayCard(type)) {
-        Card newCard(type);
-        newCard.ActionCardName(playersTurn, opponentPlayer);
-
+    if (playersTurn.PlayCard(type, opponentPlayer)) {
         // Special case for Forests currently hard coded.
         if (type == Forest)
             return false; // Return false to allow player to play again.

@@ -11,7 +11,7 @@ class Swamp_Card final : public Card {
 public:
     Swamp_Card();
 
-    void ActionCardName(Player& owner, Player& opponent) const override;
+    void ActionCard(Player& owner, Player& opponent) const override;
     bool CanEffectBePlayed(Player& owner, Player& opponent) const override;
 };
 

@@ -12,9 +12,9 @@
 
 class Player
 {
-    std::vector<Card> m_hand;
-    std::vector<Card> m_deck; // TODO: Consider migrating deck logic to a standalone class.
-    std::vector<Card> m_graveyard;
+    std::vector<Card*> m_hand;
+    std::vector<Card*> m_deck; // TODO: Consider migrating deck logic to a standalone class.
+    std::vector<Card*> m_graveyard;
 
     std::map<CardType, int> m_field;
 
@@ -23,13 +23,13 @@ public:
     Player(const std::vector<CardType>& cardTypes, const std::string& username);
 
     void DrawCard();
-    bool PlayCard(CardType cardType);
+    bool PlayCard(CardType cardType, Player& opponentPlayer);
     bool HasCardInHand(CardType cardType) const;
     // Returns if successfully moves card from hand to graveyard.
     bool DiscardCard(CardType cardType);
     bool DiscardRandomCard();
 
-    const std::vector<Card>& GetHand() const { return m_hand; }
+    const std::vector<Card*>& GetHand() const { return m_hand; }
     const std::map<CardType, int>& GetField() const { return m_field; }
 
     int GetFieldCardCount() const;
@@ -55,7 +55,7 @@ private:
     // Returns -1 if no card is found.
     int GetHandIndexByLetter(CardType cardType) const;
 
-    static std::map<CardType, int> CountList(std::vector<Card> list);
+    static std::map<CardType, int> CountList(std::vector<Card*> list);
 
     void LogMessage(const std::string& message);
 };

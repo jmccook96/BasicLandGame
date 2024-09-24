@@ -24,7 +24,7 @@ std::string Card::GetCardsEffect(CardType type) {
         case CardType::Plains:   return "Returns a random card from graveyard to your hand.";
         case CardType::Mountain: return "Destroys a random card your opponent controls.";
         case CardType::Island:   return "Draws a card.";
-        case CardType::Forest: // Fall-through
+        case CardType::Forest:   return "Allows playing an additional card.";
         default: return "Currently nothing UwU";
     }
     return "";

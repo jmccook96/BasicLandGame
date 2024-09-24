@@ -11,7 +11,7 @@ Mountain_Card::Mountain_Card()
 {
 }
 
-void Mountain_Card::ActionCardName(Player&, Player &opponent) const {
+void Mountain_Card::ActionCard(Player&, Player &opponent) const {
     opponent.DestroyRandomLand();
 }
 

@@ -9,7 +9,7 @@ Forest_Card::Forest_Card()
 {
 }
 
-void Forest_Card::ActionCardName(Player &owner, Player &opponent) const {
+void Forest_Card::ActionCard(Player &owner, Player &opponent) const {
     // TODO: Add 1 to the playable card count for the turn.
 }
 

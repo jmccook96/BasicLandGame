@@ -10,7 +10,7 @@ class Mountain_Card final : public Card {
 public:
     Mountain_Card();
 
-    void ActionCardName(Player& owner, Player& opponent) const override;
+    void ActionCard(Player& owner, Player& opponent) const override;
     bool CanEffectBePlayed(Player& owner, Player& opponent) const override;
 };
 

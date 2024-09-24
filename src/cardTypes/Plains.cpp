@@ -11,7 +11,7 @@ Plains_Card::Plains_Card()
 {
 }
 
-void Plains_Card::ActionCardName(Player &owner, Player &opponent) const {
+void Plains_Card::ActionCard(Player &owner, Player &opponent) const {
     owner.ReturnRandomLandFromGraveyard();
 }
 

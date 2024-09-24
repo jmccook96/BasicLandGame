@@ -31,8 +31,7 @@ public:
 
     [[nodiscard]] const CardType& GetType() const { return m_type; }
 
-    // TODO: Const these.
-    virtual void ActionCardName(Player& owner, Player& opponent)    const { }
+    virtual void ActionCard(Player& owner, Player& opponent)        const { }
     virtual bool CanEffectBePlayed(Player& owner, Player& opponent) const { return false; }
 
     [[nodiscard]] std::string GetName() const          { return GetName(m_type); };
