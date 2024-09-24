@@ -74,7 +74,6 @@ bool LandGame::ActionInput(char input, Player& playersTurn, Player& opponentPlay
     {
         std::cout << "Players content:" << std::endl;
         DisplayUsersContent(playersTurn, true, true);
-        std::cout << "---------------------" << std::endl;
         std::cout << "AIs field:" << std::endl;
         DisplayUsersContent(opponentPlayer, true, false);
         return false;
@@ -96,7 +95,7 @@ void LandGame::DisplayMap(const std::map<LandType, int>& map)
 {
     for (const auto& pos : map)
     {
-        std::cout << GetTypeFromLetter(pos.first) << ":" << pos.second << ", ";
+        std::cout << Card::GetLetter(pos.first) << ":" << pos.second << ", ";
     }
     std::cout << std::endl;
 }
@@ -105,12 +104,12 @@ void LandGame::DisplayUsersContent(const Player& player, bool bDisplayField, boo
 {
     if (bDisplayHand)
     {
-        std::cout << "Lands in hand: " << std::endl;
+        std::cout << "Cards in hand: " << std::endl;
         DisplayMap(player.CountHand());
     }
     if (bDisplayField)
     {
-        std::cout << "Lands on field: " << std::endl;
+        std::cout << "Cards on field: " << std::endl;
         DisplayMap(player.GetField());
     }
     std::cout << "--------------------------" << std::endl;

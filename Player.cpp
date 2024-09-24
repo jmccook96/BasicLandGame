@@ -25,7 +25,7 @@ Player::Player(const std::vector<LandType>& cardTypes, const std::string& userna
 
 void Player::GenerateField()
 {
-    for (int landIndex = (int)LandType::NONE; landIndex < LandType::COUNT; landIndex++)
+    for (int landIndex = (int)LandType::NONE + 1; landIndex < LandType::COUNT; landIndex++)
         m_field.insert_or_assign(LandType(landIndex), 0);
 }
 
@@ -165,7 +165,7 @@ int Player::GetHandIndexByLetter(LandType cardType) const
 std::map<LandType, int> Player::CountList(std::vector<Card> list)
 {
     std::map<LandType, int> counts;
-    for (int landIndex = (int)LandType::NONE; landIndex < LandType::COUNT; landIndex++)
+    for (int landIndex = (int)LandType::NONE + 1; landIndex < LandType::COUNT; landIndex++)
         counts.insert_or_assign(LandType(landIndex), 0);
 
     for (Card card : list)
