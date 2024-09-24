@@ -4,12 +4,6 @@
 
 #include "Card.h"
 
-Card::Card(CardType t)
-    : type(t)
-{
-}
-
-std::string Card::GetName() const { return GetName(type); }
 std::string Card::GetName(CardType typeIn)
 {
     switch (typeIn)
@@ -24,8 +18,19 @@ std::string Card::GetName(CardType typeIn)
     }
 }
 
-char Card::GetLetter() const { return GetLetter(type); }
-char Card::GetLetter(CardType typeIn)
+std::string Card::GetCardsEffect(CardType type) {
+    switch (type) {
+        case CardType::Swamp:    return "Forces opponent to discard a random card.";
+        case CardType::Plains:   return "Returns a random card from graveyard to your hand.";
+        case CardType::Mountain: return "Destroys a random card your opponent controls.";
+        case CardType::Island:   return "Draws a card.";
+        case CardType::Forest: // Fall-through
+        default: return "Currently nothing UwU";
+    }
+    return "";
+}
+
+char Card::GetLetterRepresentation(CardType typeIn)
 {
     switch (typeIn)
     {

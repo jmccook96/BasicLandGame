@@ -23,7 +23,7 @@ Player::Player(const std::vector<CardType>& cardTypes, const std::string& userna
 
 void Player::GenerateField()
 {
-    for (int landIndex = (int)CardType::NONE + 1; landIndex < CardType::COUNT; landIndex++)
+    for (int landIndex = (int)CardType::FIRST; landIndex < CardType::COUNT; landIndex++)
         m_field.insert_or_assign(CardType(landIndex), 0);
 }
 
@@ -57,8 +57,7 @@ bool Player::PlayCard(CardType cardType)
 }
 
 bool Player::HasCardInHand(CardType cardType) const { return GetHandIndexByLetter(cardType) >= 0; }
-bool Player::DiscardCard(CardType cardType)
-{
+bool Player::DiscardCard(CardType cardType) {
     int index = GetHandIndexByLetter(cardType);
     if (index < 0)
         return false;
@@ -69,10 +68,14 @@ bool Player::DiscardCard(CardType cardType)
     return true;
 }
 
-int Player::GetFieldLandsCount() const
-{
+bool Player::DiscardRandomCard() {
+    // Get random card in hand.
+    return DiscardCard(m_hand[GetRandomEngine()() % m_hand.size()].GetType());
+}
+
+int Player::GetFieldCardCount() const {
     int iRet = 0;
-    for (int landIndex = NONE + 1; landIndex < COUNT; landIndex++)
+    for (int landIndex = FIRST; landIndex < COUNT; landIndex++)
     {
         auto pos = m_field.find((CardType)landIndex);
         if (pos == m_field.end())
@@ -100,7 +103,7 @@ bool Player::DestroyLand(CardType type)
 bool Player::DestroyRandomLand()
 {
     // Ensure a land exists.
-    if (GetFieldLandsCount() == 0)
+    if (GetFieldCardCount() == 0)
         return false;
 
     while (!DestroyLand(CardEffects::GetRandomLandType()));
@@ -163,7 +166,7 @@ int Player::GetHandIndexByLetter(CardType cardType) const
 std::map<CardType, int> Player::CountList(std::vector<Card> list)
 {
     std::map<CardType, int> counts;
-    for (int landIndex = (int)CardType::NONE + 1; landIndex < CardType::COUNT; landIndex++)
+    for (int landIndex = (int)CardType::FIRST; landIndex < CardType::COUNT; landIndex++)
         counts.insert_or_assign(CardType(landIndex), 0);
 
     for (Card card : list)

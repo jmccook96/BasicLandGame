@@ -55,7 +55,13 @@ void LandGame::TakeTurn_User()
 void LandGame::TakeTurn_AI()
 {
     OnTurnStart(m_playerAI);
-    ActionInput(m_playerAI.GetHand()[0].GetLetter(), m_playerAI, m_player);
+    // Iterate over hand until we find a card that makes sense to play.
+    for (const Card& card : m_playerAI.GetHand()) {
+        if (card.CanEffectBePlayed(m_playerAI, m_player)) {
+            ActionInput(card.GetLetterRepresentation(), m_playerAI, m_player);
+        }
+    }
+    ActionInput(m_playerAI.GetHand()[0].GetLetterRepresentation(), m_playerAI, m_player);
 }
 
 
@@ -76,18 +82,38 @@ bool LandGame::ActionInput(const char input, Player& playersTurn, Player& oppone
 {
     if (input == '?')
     {
+        std::cout << "Cards Effects: " << std::endl;
+        DisplayCardEffects();
+
         std::cout << "Players content:" << std::endl;
         DisplayUsersContent(playersTurn, true, true);
+
         std::cout << "AIs field:" << std::endl;
         DisplayUsersContent(opponentPlayer, true, false);
         return false;
     }
 
     const CardType type = GetTypeFromLetter(input);
-    if (playersTurn.PlayCard(type))
-        return CardEffects::ExecuteEffect(type, playersTurn, opponentPlayer);
+    if (playersTurn.PlayCard(type)) {
+        Card newCard(type);
+        newCard.ActionCardName(playersTurn, opponentPlayer);
+
+        // Special case for Forests currently hard coded.
+        if (type == Forest)
+            return false; // Return false to allow player to play again.
+
+        return true;
+    }
 
     return false;
+}
+
+void LandGame::DisplayCardEffects() {
+    for (int typeIdx = FIRST; typeIdx < CardType::COUNT; ++typeIdx) {
+        CardType type = CardType(typeIdx);
+        std::cout << "Card: " << Card::GetName(type) << ", Effect: \n" <<
+            Card::GetCardsEffect(type) << std::endl;
+    }
 }
 
 void LandGame::DisplayTurnControls()
@@ -99,7 +125,8 @@ void LandGame::DisplayMap(const std::map<CardType, int>& map)
 {
     for (const auto& pos : map)
     {
-        std::cout << Card::GetLetter(pos.first) << ":" << pos.second << ", ";
+        std::cout << Card::GetLetterRepresentation(pos.first) << " (" <<
+            Card::GetName(pos.first) << "):" << pos.second << ", ";
     }
     std::cout << std::endl;
 }

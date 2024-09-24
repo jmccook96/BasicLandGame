@@ -27,11 +27,12 @@ public:
     bool HasCardInHand(CardType cardType) const;
     // Returns if successfully moves card from hand to graveyard.
     bool DiscardCard(CardType cardType);
+    bool DiscardRandomCard();
 
     const std::vector<Card>& GetHand() const { return m_hand; }
     const std::map<CardType, int>& GetField() const { return m_field; }
 
-    int GetFieldLandsCount() const;
+    int GetFieldCardCount() const;
     int GetGraveyardLandsCount() const { return (int)m_graveyard.size(); }
 
     std::map<CardType, int> CountHand() const;
