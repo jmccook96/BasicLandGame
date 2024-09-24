@@ -8,7 +8,7 @@
 #include <cstdint>
 #include <string>
 
-enum LandType : int8_t
+enum CardType : int8_t
 {
     NONE,
     Forest,
@@ -21,16 +21,16 @@ enum LandType : int8_t
 
 class Card
 {
-    LandType type;
+    CardType type;
 public:
-    Card(LandType t);
+    Card(CardType t);
 
-    LandType GetType() const { return type; }
+    CardType GetType() const { return type; }
 
     std::string GetName() const;
-    static std::string GetName(LandType type);
+    static std::string GetName(CardType type);
     char GetLetter() const;
-    static char GetLetter(LandType type);
+    static char GetLetter(CardType type);
 };
 
 

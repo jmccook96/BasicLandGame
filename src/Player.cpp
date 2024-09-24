@@ -12,9 +12,7 @@
 
 #define LOG std::cout << m_name << ": "
 
-static auto s_rng = std::default_random_engine {};
-
-Player::Player(const std::vector<LandType>& cardTypes, const std::string& username)
+Player::Player(const std::vector<CardType>& cardTypes, const std::string& username)
     : m_name(username)
 {
     GenerateField();
@@ -25,13 +23,13 @@ Player::Player(const std::vector<LandType>& cardTypes, const std::string& userna
 
 void Player::GenerateField()
 {
-    for (int landIndex = (int)LandType::NONE + 1; landIndex < LandType::COUNT; landIndex++)
-        m_field.insert_or_assign(LandType(landIndex), 0);
+    for (int landIndex = (int)CardType::NONE + 1; landIndex < CardType::COUNT; landIndex++)
+        m_field.insert_or_assign(CardType(landIndex), 0);
 }
 
-void Player::GenerateDeck(const std::vector<LandType>& cardTypes)
+void Player::GenerateDeck(const std::vector<CardType>& cardTypes)
 {
-    for (LandType type : cardTypes)
+    for (CardType type : cardTypes)
         for (int cardCount = 0; cardCount < CARDS_PER_TYPE; cardCount++)
             m_deck.emplace_back(type);
 }
@@ -46,7 +44,7 @@ void Player::DrawCard()
     m_deck.pop_back();
 }
 
-bool Player::PlayCard(LandType cardType)
+bool Player::PlayCard(CardType cardType)
 {
     int index = GetHandIndexByLetter(cardType);
     if (index < 0)
@@ -58,8 +56,8 @@ bool Player::PlayCard(LandType cardType)
     return true;
 }
 
-bool Player::HasCardInHand(LandType cardType) const { return GetHandIndexByLetter(cardType) >= 0; }
-bool Player::DiscardCard(LandType cardType)
+bool Player::HasCardInHand(CardType cardType) const { return GetHandIndexByLetter(cardType) >= 0; }
+bool Player::DiscardCard(CardType cardType)
 {
     int index = GetHandIndexByLetter(cardType);
     if (index < 0)
@@ -76,7 +74,7 @@ int Player::GetFieldLandsCount() const
     int iRet = 0;
     for (int landIndex = NONE + 1; landIndex < COUNT; landIndex++)
     {
-        auto pos = m_field.find((LandType)landIndex);
+        auto pos = m_field.find((CardType)landIndex);
         if (pos == m_field.end())
             continue;
 
@@ -86,9 +84,9 @@ int Player::GetFieldLandsCount() const
     return iRet;
 }
 
-std::map<LandType, int> Player::CountHand() const { return CountList(m_hand); }
+std::map<CardType, int> Player::CountHand() const { return CountList(m_hand); }
 
-bool Player::DestroyLand(LandType type)
+bool Player::DestroyLand(CardType type)
 {
     if (m_field[type] > 0)
     {
@@ -109,7 +107,7 @@ bool Player::DestroyRandomLand()
     return true;
 }
 
-bool Player::ReturnLandFromGraveyard(LandType type)
+bool Player::ReturnLandFromGraveyard(CardType type)
 {
     for (int index = 0; index < m_graveyard.size(); ++index)
     {
@@ -141,7 +139,7 @@ void Player::DrawOpeningHand()
 
 void Player::ShuffleDeck()
 {
-    std::shuffle(m_deck.begin(), m_deck.end(), s_rng);
+    std::shuffle(m_deck.begin(), m_deck.end(), GetRandomEngine());
     LOG << "Deck shuffled!" << std::endl;
 }
 
@@ -153,7 +151,7 @@ void Player::MoveGraveyardToDeck()
     ShuffleDeck();     // Shuffle the deck
 }
 
-int Player::GetHandIndexByLetter(LandType cardType) const
+int Player::GetHandIndexByLetter(CardType cardType) const
 {
     for (int cardIndex = 0; cardIndex < m_hand.size(); cardIndex++)
         if (m_hand[cardIndex].GetType() == cardType)
@@ -162,11 +160,11 @@ int Player::GetHandIndexByLetter(LandType cardType) const
     return -1;
 }
 
-std::map<LandType, int> Player::CountList(std::vector<Card> list)
+std::map<CardType, int> Player::CountList(std::vector<Card> list)
 {
-    std::map<LandType, int> counts;
-    for (int landIndex = (int)LandType::NONE + 1; landIndex < LandType::COUNT; landIndex++)
-        counts.insert_or_assign(LandType(landIndex), 0);
+    std::map<CardType, int> counts;
+    for (int landIndex = (int)CardType::NONE + 1; landIndex < CardType::COUNT; landIndex++)
+        counts.insert_or_assign(CardType(landIndex), 0);
 
     for (Card card : list)
         counts[card.GetType()]++;

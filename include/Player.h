@@ -16,35 +16,35 @@ class Player
     std::vector<Card> m_deck; // TODO: Consider migrating deck logic to a standalone class.
     std::vector<Card> m_graveyard;
 
-    std::map<LandType, int> m_field;
+    std::map<CardType, int> m_field;
 
     std::string m_name;
 public:
-    Player(const std::vector<LandType>& cardTypes, const std::string& username);
+    Player(const std::vector<CardType>& cardTypes, const std::string& username);
 
     void DrawCard();
-    bool PlayCard(LandType cardType);
-    bool HasCardInHand(LandType cardType) const;
+    bool PlayCard(CardType cardType);
+    bool HasCardInHand(CardType cardType) const;
     // Returns if successfully moves card from hand to graveyard.
-    bool DiscardCard(LandType cardType);
+    bool DiscardCard(CardType cardType);
 
     const std::vector<Card>& GetHand() const { return m_hand; }
-    const std::map<LandType, int>& GetField() const { return m_field; }
+    const std::map<CardType, int>& GetField() const { return m_field; }
 
     int GetFieldLandsCount() const;
     int GetGraveyardLandsCount() const { return (int)m_graveyard.size(); }
 
-    std::map<LandType, int> CountHand() const;
+    std::map<CardType, int> CountHand() const;
 
     // Card effects to be executed.
-    bool DestroyLand(LandType type);
+    bool DestroyLand(CardType type);
     bool DestroyRandomLand();
-    bool ReturnLandFromGraveyard(LandType type);
+    bool ReturnLandFromGraveyard(CardType type);
     bool ReturnRandomLandFromGraveyard();
 
 private:
     void GenerateField();
-    void GenerateDeck(const std::vector<LandType>& cardTypes);
+    void GenerateDeck(const std::vector<CardType>& cardTypes);
     void DrawOpeningHand();
 
     void ShuffleDeck();
@@ -52,9 +52,9 @@ private:
 
     // Returns the index of the first card in the hand that matches the card letter.
     // Returns -1 if no card is found.
-    int GetHandIndexByLetter(LandType cardType) const;
+    int GetHandIndexByLetter(CardType cardType) const;
 
-    static std::map<LandType, int> CountList(std::vector<Card> list);
+    static std::map<CardType, int> CountList(std::vector<Card> list);
 
     void LogMessage(const std::string& message);
 };

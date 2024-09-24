@@ -6,15 +6,15 @@
 #define CARDEFFECTS_H
 
 class Player;
-enum LandType : signed char;
+enum CardType : signed char;
 
 class CardEffects
 {
 public:
     // Returns if the turn
-    static bool ExecuteEffect(LandType type, Player playerActing, Player targetPlayer);
+    static bool ExecuteEffect(CardType type, Player playerActing, Player targetPlayer);
 
-    static LandType GetRandomLandType();
+    static CardType GetRandomLandType();
 
 private:
     static bool ExecuteSwamp(Player playerActing, Player targetPlayer);

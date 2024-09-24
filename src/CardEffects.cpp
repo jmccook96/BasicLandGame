@@ -8,7 +8,7 @@
 
 #include "Player.h"
 
-bool CardEffects::ExecuteEffect(LandType type, Player playerActing, Player targetPlayer)
+bool CardEffects::ExecuteEffect(CardType type, Player playerActing, Player targetPlayer)
 {
     switch (type)
     {
@@ -53,12 +53,12 @@ bool CardEffects::ExecuteMountain(Player playerActing, Player targetPlayer)
     return targetPlayer.DestroyRandomLand();
 }
 
-LandType CardEffects::GetRandomLandType()
+CardType CardEffects::GetRandomLandType()
 {
     static std::minstd_rand _rand(80085);
-    LandType type = LandType(_rand() % COUNT);
+    CardType type = CardType(_rand() % COUNT);
     if (type == NONE)
-        type = LandType(_rand() % COUNT);
+        type = CardType(_rand() % COUNT);
 
     return type;
 }

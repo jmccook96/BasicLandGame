@@ -23,13 +23,17 @@ void LandGame::RunGame()
     {
         std::cout << "Player turn!\n" << std::endl;
         TakeTurn_User();
-        if (HasPlayerWon(m_player))
+        if (HasPlayerWon(m_player)) {
+            std::cout << "Player won!\n" << std::endl;
             break;
+        }
 
         std::cout << "AI turn!\n" << std::endl;
         TakeTurn_AI();
-        if (HasPlayerWon(m_playerAI))
+        if (HasPlayerWon(m_playerAI)) {
+            std::cout << "AI won!\n" << std::endl;
             break;
+        }
     }
 }
 
@@ -68,7 +72,7 @@ void LandGame::OnTurnStart(Player& playersTurn)
     playersTurn.DrawCard();
 }
 
-bool LandGame::ActionInput(char input, Player& playersTurn, Player& opponentPlayer)
+bool LandGame::ActionInput(const char input, Player& playersTurn, Player& opponentPlayer)
 {
     if (input == '?')
     {
@@ -79,7 +83,7 @@ bool LandGame::ActionInput(char input, Player& playersTurn, Player& opponentPlay
         return false;
     }
 
-    const LandType type = GetTypeFromLetter(input);
+    const CardType type = GetTypeFromLetter(input);
     if (playersTurn.PlayCard(type))
         return CardEffects::ExecuteEffect(type, playersTurn, opponentPlayer);
 
@@ -91,7 +95,7 @@ void LandGame::DisplayTurnControls()
     std::cout << "Enter land to play (F, P, M, S, I) or '?' for field recap and information: " << std::endl;
 }
 
-void LandGame::DisplayMap(const std::map<LandType, int>& map)
+void LandGame::DisplayMap(const std::map<CardType, int>& map)
 {
     for (const auto& pos : map)
     {
@@ -115,7 +119,7 @@ void LandGame::DisplayUsersContent(const Player& player, bool bDisplayField, boo
     std::cout << "--------------------------" << std::endl;
 }
 
-LandType LandGame::GetTypeFromLetter(char input)
+CardType LandGame::GetTypeFromLetter(char input)
 {
     switch (std::toupper(input))
     {

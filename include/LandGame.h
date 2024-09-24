@@ -26,10 +26,10 @@ private:
     static bool ActionInput(char input, Player& playersTurn, Player& opponentPlayer);
 
     static void DisplayTurnControls();
-    static void DisplayMap(const std::map<LandType, int>& map);
+    static void DisplayMap(const std::map<CardType, int>& map);
     static void DisplayUsersContent(const Player& player, bool bDisplayField, bool bDisplayHand);
 
-    static LandType GetTypeFromLetter(char input);
+    static CardType GetTypeFromLetter(char input);
     static bool HasPlayerWon(const Player& player);
 };
 

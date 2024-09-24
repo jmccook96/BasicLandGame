@@ -3,13 +3,14 @@ project(LandGameDemo)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(LandGameDemo main.cpp
-        CardEffects.cpp
-        CardEffects.h
-        Card.cpp
-        Card.h
-        Player.cpp
-        Player.h
-        GameRuleDefs.h
-        LandGame.cpp
-        LandGame.h)
+# Specify the directories where the include files are located
+include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/include/CardTypes)
+
+# Collect all source files in the /src directory
+file(GLOB SOURCES
+        "${PROJECT_SOURCE_DIR}/src/*.cpp"
+        "${PROJECT_SOURCE_DIR}/src/CardTypes/*.cpp")
+
+# Add the executable target, using the collected source files
+add_executable(LandGameDemo main.cpp ${SOURCES})
